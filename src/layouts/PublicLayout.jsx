@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import { Link, NavLink, Outlet } from 'react-router-dom';
 import Button from '../components/common/Button';
-import WhatsAppButton from '../components/public/WhatsAppButton';
+import ScrollToTop from '../components/common/ScrollToTop';
+import WhatsAppLeadWidget from '../components/public/WhatsAppLeadWidget';
 import { useSettings } from '../hooks/useSettings';
 
 const NAV_ITEMS = [
@@ -39,6 +40,7 @@ export default function PublicLayout() {
 
   return (
     <div className="flex min-h-screen flex-col bg-background">
+      <ScrollToTop />
       <header className="sticky top-0 z-50 border-b border-border bg-surface/90 backdrop-blur">
         <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-4 sm:px-6 lg:px-8">
           <Link to="/" className="flex items-center gap-2 font-heading text-xl font-bold text-dark">
@@ -181,7 +183,7 @@ export default function PublicLayout() {
         </div>
       </footer>
 
-      <WhatsAppButton phone={settings?.whatsapp} />
+      <WhatsAppLeadWidget phone={settings?.whatsapp} siteName={settings?.site_name} />
     </div>
   );
 }

@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { CalendarDays, Share2, Sparkles, Tag, UserRound } from 'lucide-react';
 import { useParams } from 'react-router-dom';
 import { fetchPublicArticleBySlug } from '../../api/publicArticleApi';
 import LoadingSkeleton from '../../components/common/LoadingSkeleton';
@@ -98,20 +99,39 @@ export default function ArticleDetailPage() {
         jsonLd={jsonLd}
       />
 
-      <article className="mx-auto max-w-3xl px-4 py-16 sm:px-6 lg:px-8">
-        {article.category && (
-          <span className="rounded-full bg-primary/10 px-4 py-1.5 text-sm font-semibold text-primary">
-            {article.category.name}
-          </span>
-        )}
-        <h1 className="mt-4 font-heading text-3xl font-bold text-dark sm:text-4xl">{article.title}</h1>
-        <div className="mt-3 flex items-center gap-2 text-sm text-muted">
-          {article.author && <span>{article.author}</span>}
-          {article.published_at && <span>&middot; {formatDate(article.published_at)}</span>}
-        </div>
+      <section className="relative overflow-hidden bg-dark py-20 text-white sm:py-24">
+        <div className="absolute inset-0 hero-grid-pattern opacity-40" />
+        <div className="pointer-events-none absolute -left-24 top-0 h-72 w-72 rounded-full bg-primary/30 blur-3xl" />
+        <div className="pointer-events-none absolute -right-16 bottom-0 h-72 w-72 rounded-full bg-accent/20 blur-3xl" />
 
+        <div className="reveal-up relative mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
+          {article.category && (
+            <span className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-4 py-2 text-sm font-semibold text-white backdrop-blur">
+              <Sparkles size={16} />
+              {article.category.name}
+            </span>
+          )}
+          <h1 className="mt-4 font-heading text-3xl font-extrabold leading-tight text-white sm:text-4xl">{article.title}</h1>
+          <div className="mt-4 flex flex-wrap items-center gap-4 text-sm text-white/70">
+            {article.author && (
+              <span className="inline-flex items-center gap-1.5">
+                <UserRound size={14} />
+                {article.author}
+              </span>
+            )}
+            {article.published_at && (
+              <span className="inline-flex items-center gap-1.5">
+                <CalendarDays size={14} />
+                {formatDate(article.published_at)}
+              </span>
+            )}
+          </div>
+        </div>
+      </section>
+
+      <article className="mx-auto max-w-3xl px-4 py-16 sm:px-6 lg:px-8">
         {article.thumbnail && (
-          <img src={article.thumbnail} alt={article.title} className="mt-8 w-full rounded-3xl object-cover shadow-lg" />
+          <img src={article.thumbnail} alt={article.title} className="reveal-up -mt-20 w-full rounded-3xl object-cover shadow-xl" />
         )}
 
         <div className="prose prose-sm mt-10 max-w-none text-dark" dangerouslySetInnerHTML={{ __html: article.content }} />
@@ -119,22 +139,26 @@ export default function ArticleDetailPage() {
         {article.tags?.length > 0 && (
           <div className="mt-8 flex flex-wrap gap-2">
             {article.tags.map((tag) => (
-              <span key={tag} className="rounded-full border border-border px-3 py-1 text-xs font-medium text-muted">
-                #{tag}
+              <span key={tag} className="inline-flex items-center gap-1 rounded-full border border-border px-3 py-1 text-xs font-medium text-muted">
+                <Tag size={11} />
+                {tag}
               </span>
             ))}
           </div>
         )}
 
-        <div className="mt-10 flex items-center gap-3 border-t border-border pt-6">
-          <span className="text-sm font-medium text-dark">Bagikan:</span>
+        <div className="mt-10 flex flex-wrap items-center gap-3 border-t border-border pt-6">
+          <span className="inline-flex items-center gap-1.5 text-sm font-medium text-dark">
+            <Share2 size={15} />
+            Bagikan:
+          </span>
           {['whatsapp', 'facebook', 'twitter'].map((platform) => (
             <a
               key={platform}
               href={shareUrl(platform, currentUrl, article.title)}
               target="_blank"
               rel="noopener noreferrer"
-              className="rounded-lg border border-border px-3 py-1.5 text-xs font-medium capitalize text-dark hover:bg-background"
+              className="rounded-lg border border-border px-3 py-1.5 text-xs font-medium capitalize text-dark transition-colors hover:border-primary hover:text-primary"
             >
               {platform}
             </a>

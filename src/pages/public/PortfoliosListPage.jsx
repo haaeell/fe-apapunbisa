@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { Search, Sparkles, Star } from 'lucide-react';
 import { useSearchParams } from 'react-router-dom';
 import { fetchPublicCategories } from '../../api/publicCategoryApi';
 import { fetchPublicPortfolios } from '../../api/publicPortfolioApi';
@@ -7,7 +8,6 @@ import LoadingSkeleton from '../../components/common/LoadingSkeleton';
 import Pagination from '../../components/common/Pagination';
 import Seo from '../../components/common/Seo';
 import PortfolioCard from '../../components/public/PortfolioCard';
-import SectionHeading from '../../components/public/SectionHeading';
 
 export default function PortfoliosListPage() {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -84,40 +84,68 @@ export default function PortfoliosListPage() {
         path={`/portofolio${searchParams.toString() ? `?${searchParams.toString()}` : ''}`}
       />
 
-      <section className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
-        <SectionHeading label="Portofolio" title="Proyek yang Telah Kami Kerjakan" align="left" />
+      <section className="relative overflow-hidden bg-dark py-20 text-white sm:py-24">
+        <div className="absolute inset-0 hero-grid-pattern opacity-40" />
+        <div className="pointer-events-none absolute -left-24 top-0 h-72 w-72 rounded-full bg-primary/30 blur-3xl" />
+        <div className="pointer-events-none absolute -right-16 bottom-0 h-72 w-72 rounded-full bg-accent/20 blur-3xl" />
 
-        <div className="mt-8 flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
-          <form onSubmit={handleSearchSubmit} className="flex w-full max-w-md gap-2">
-            <input
-              name="q"
-              defaultValue={search}
-              placeholder="Cari portofolio..."
-              className="w-full rounded-lg border border-border px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary/30"
-            />
-            <button type="submit" className="rounded-lg border border-border px-4 py-2.5 text-sm font-medium hover:bg-background">
-              Cari
-            </button>
-          </form>
+        <div className="relative mx-auto max-w-4xl px-4 text-center sm:px-6 lg:px-8">
+          <span className="reveal-up mx-auto mb-6 inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-4 py-2 text-sm font-semibold text-white backdrop-blur">
+            <Sparkles size={16} />
+            Portofolio
+          </span>
+          <h1 className="reveal-up reveal-delay-2 font-heading text-4xl font-extrabold leading-tight text-white sm:text-5xl">
+            Proyek yang Telah Kami Kerjakan
+          </h1>
+          <p className="reveal-up reveal-delay-3 mx-auto mt-5 max-w-2xl text-base leading-8 text-white/75">
+            Lihat hasil kerja nyata tim kami di berbagai bidang, dari teknologi hingga kreatif.
+          </p>
+        </div>
+      </section>
 
-          <div className="flex flex-wrap gap-2">
-            <select
-              value={category}
-              onChange={(event) => updateParam('category', event.target.value)}
-              className="rounded-lg border border-border px-3 py-2 text-sm"
-            >
-              <option value="">Semua Kategori</option>
-              {categories.map((cat) => (
-                <option key={cat.id} value={cat.slug}>
-                  {cat.name}
-                </option>
-              ))}
-            </select>
+      <section className="mx-auto max-w-7xl px-4 py-14 sm:px-6 lg:px-8">
+        <div className="reveal-up -mt-24 rounded-[1.75rem] border border-border bg-surface p-5 shadow-xl sm:p-6">
+          <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+            <form onSubmit={handleSearchSubmit} className="flex w-full max-w-md gap-2">
+              <div className="relative w-full">
+                <Search size={16} className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-muted" />
+                <input
+                  name="q"
+                  defaultValue={search}
+                  placeholder="Cari portofolio..."
+                  className="w-full rounded-xl border border-border bg-background py-2.5 pl-9 pr-4 text-sm focus:outline-none focus:ring-2 focus:ring-primary/30"
+                />
+              </div>
+              <button type="submit" className="shrink-0 rounded-xl bg-primary px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-primary-dark">
+                Cari
+              </button>
+            </form>
 
-            <label className="flex items-center gap-2 rounded-lg border border-border px-3 py-2 text-sm">
-              <input type="checkbox" checked={featured} onChange={(event) => updateParam('featured', event.target.checked ? '1' : '')} />
-              Unggulan
-            </label>
+            <div className="flex flex-wrap gap-2">
+              <select
+                value={category}
+                onChange={(event) => updateParam('category', event.target.value)}
+                className="rounded-xl border border-border bg-background px-3 py-2.5 text-sm"
+              >
+                <option value="">Semua Kategori</option>
+                {categories.map((cat) => (
+                  <option key={cat.id} value={cat.slug}>
+                    {cat.name}
+                  </option>
+                ))}
+              </select>
+
+              <label className="flex cursor-pointer items-center gap-2 rounded-xl border border-border bg-background px-3 py-2.5 text-sm font-medium text-dark">
+                <input
+                  type="checkbox"
+                  checked={featured}
+                  onChange={(event) => updateParam('featured', event.target.checked ? '1' : '')}
+                  className="accent-primary"
+                />
+                <Star size={14} className="text-accent" />
+                Unggulan
+              </label>
+            </div>
           </div>
         </div>
 

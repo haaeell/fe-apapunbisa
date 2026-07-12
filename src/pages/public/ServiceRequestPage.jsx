@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { CheckCircle2, FileUp, MessageCircle, Sparkles, TimerReset } from 'lucide-react';
 import { useSearchParams } from 'react-router-dom';
 import { fetchPublicServices } from '../../api/publicServiceApi';
 import { submitServiceRequest } from '../../api/serviceRequestApi';
@@ -7,7 +8,6 @@ import Input from '../../components/common/Input';
 import Seo from '../../components/common/Seo';
 import Select from '../../components/common/Select';
 import Textarea from '../../components/common/Textarea';
-import SectionHeading from '../../components/public/SectionHeading';
 
 function initialForm() {
   return {
@@ -74,8 +74,8 @@ export default function ServiceRequestPage() {
   if (isSuccess) {
     return (
       <section className="mx-auto flex max-w-xl flex-col items-center gap-4 px-4 py-24 text-center">
-        <span className="flex h-16 w-16 items-center justify-center rounded-full bg-success/10 text-3xl text-success">
-          &#10003;
+        <span className="flex h-16 w-16 items-center justify-center rounded-full bg-success/10 text-success">
+          <CheckCircle2 size={32} />
         </span>
         <h1 className="font-heading text-2xl font-bold text-dark">Permintaan Terkirim!</h1>
         <p className="text-muted">
@@ -94,14 +94,38 @@ export default function ServiceRequestPage() {
         path={`/konsultasi${searchParams.toString() ? `?${searchParams.toString()}` : ''}`}
       />
 
-      <section className="mx-auto max-w-3xl px-4 py-16 sm:px-6 lg:px-8">
-        <SectionHeading
-          label="Konsultasi Gratis"
-          title="Konsultasikan Kebutuhan Anda"
-          description="Isi formulir berikut, tim kami akan menghubungi Anda untuk mendiskusikan solusi terbaik."
-        />
+      <section className="relative overflow-hidden bg-dark py-20 text-white sm:py-24">
+        <div className="absolute inset-0 hero-grid-pattern opacity-40" />
+        <div className="pointer-events-none absolute -left-24 top-0 h-72 w-72 rounded-full bg-primary/30 blur-3xl" />
+        <div className="pointer-events-none absolute -right-16 bottom-0 h-72 w-72 rounded-full bg-accent/20 blur-3xl" />
 
-        <form onSubmit={handleSubmit} className="mt-10 flex flex-col gap-4 rounded-2xl border border-border bg-surface p-6 sm:p-8">
+        <div className="relative mx-auto max-w-4xl px-4 text-center sm:px-6 lg:px-8">
+          <span className="reveal-up mx-auto mb-6 inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-4 py-2 text-sm font-semibold text-white backdrop-blur">
+            <Sparkles size={16} />
+            Konsultasi Gratis
+          </span>
+          <h1 className="reveal-up reveal-delay-2 font-heading text-4xl font-extrabold leading-tight text-white sm:text-5xl">
+            Konsultasikan Kebutuhan Anda
+          </h1>
+          <p className="reveal-up reveal-delay-3 mx-auto mt-5 max-w-2xl text-base leading-8 text-white/75">
+            Isi formulir berikut, tim kami akan menghubungi Anda untuk mendiskusikan solusi terbaik.
+          </p>
+
+          <div className="reveal-up reveal-delay-3 mt-8 flex flex-wrap items-center justify-center gap-3">
+            <span className="inline-flex items-center gap-2 rounded-full border border-white/15 px-4 py-2 text-sm font-semibold text-white/70">
+              <MessageCircle size={16} />
+              Respons cepat
+            </span>
+            <span className="inline-flex items-center gap-2 rounded-full border border-white/15 px-4 py-2 text-sm font-semibold text-white/70">
+              <TimerReset size={16} />
+              Tanpa komitmen
+            </span>
+          </div>
+        </div>
+      </section>
+
+      <section className="mx-auto max-w-3xl px-4 py-14 sm:px-6 lg:px-8">
+        <form onSubmit={handleSubmit} className="reveal-up -mt-24 flex flex-col gap-4 rounded-[1.75rem] border border-border bg-surface p-6 shadow-xl sm:p-8">
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             <Input label="Nama" name="name" value={form.name} onChange={handleChange} error={errors.name?.[0]} required />
             <Input label="Email" name="email" type="email" value={form.email} onChange={handleChange} error={errors.email?.[0]} required />
@@ -155,19 +179,22 @@ export default function ServiceRequestPage() {
 
           <div className="flex flex-col gap-1.5">
             <label className="text-sm font-medium text-dark">Lampiran (opsional, maks. 5 file)</label>
-            <input
-              type="file"
-              multiple
-              onChange={handleFileChange}
-              className="rounded-lg border border-border px-4 py-2.5 text-sm file:mr-3 file:rounded-md file:border-0 file:bg-primary/10 file:px-3 file:py-1.5 file:text-sm file:font-medium file:text-primary"
-            />
+            <div className="relative">
+              <FileUp size={16} className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-muted" />
+              <input
+                type="file"
+                multiple
+                onChange={handleFileChange}
+                className="w-full rounded-lg border border-border py-2.5 pl-10 pr-4 text-sm file:mr-3 file:rounded-md file:border-0 file:bg-primary/10 file:px-3 file:py-1.5 file:text-sm file:font-medium file:text-primary"
+              />
+            </div>
             {errors.attachments && <span className="text-xs text-red-500">{errors.attachments[0]}</span>}
             {attachments.length > 0 && (
               <p className="text-xs text-muted">{attachments.length} file dipilih: {attachments.map((f) => f.name).join(', ')}</p>
             )}
           </div>
 
-          <Button type="submit" isLoading={isSubmitting} className="mt-2 justify-center">
+          <Button type="submit" isLoading={isSubmitting} className="mt-2 justify-center rounded-xl">
             Kirim Permintaan
           </Button>
         </form>

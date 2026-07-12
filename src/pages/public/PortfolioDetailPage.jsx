@@ -1,13 +1,27 @@
 import { useEffect, useState } from 'react';
+import {
+  Building2,
+  CalendarDays,
+  Clock3,
+  ExternalLink,
+  MapPin,
+  Sparkles,
+  Target,
+  Trophy,
+  Wrench,
+} from 'lucide-react';
 import { Link, useParams } from 'react-router-dom';
 import { fetchPublicPortfolioBySlug } from '../../api/publicPortfolioApi';
 import LoadingSkeleton from '../../components/common/LoadingSkeleton';
 import CtaBanner from '../../components/public/CtaBanner';
 import Seo from '../../components/common/Seo';
+import SectionHeading from '../../components/public/SectionHeading';
 import TestimonialCard from '../../components/public/TestimonialCard';
 import { formatDate } from '../../utils/format';
 import { externalUrl } from '../../utils/url';
 import NotFoundPage from './NotFoundPage';
+
+const INFO_ICONS = { Klien: Building2, 'Tanggal Proyek': CalendarDays, Durasi: Clock3, Lokasi: MapPin };
 
 export default function PortfolioDetailPage() {
   const { slug } = useParams();
@@ -66,24 +80,34 @@ export default function PortfolioDetailPage() {
         path={`/portofolio/${portfolio.slug}`}
       />
 
-      <section className="border-b border-border bg-surface">
-        <div className="mx-auto max-w-5xl px-4 py-16 sm:px-6 lg:px-8">
+      <section className="relative overflow-hidden bg-dark py-20 text-white sm:py-24">
+        <div className="absolute inset-0 hero-grid-pattern opacity-40" />
+        <div className="pointer-events-none absolute -left-24 top-0 h-72 w-72 rounded-full bg-primary/30 blur-3xl" />
+        <div className="pointer-events-none absolute -right-16 bottom-0 h-72 w-72 rounded-full bg-accent/20 blur-3xl" />
+
+        <div className="reveal-up relative mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
           {portfolio.category && (
-            <span className="rounded-full bg-primary/10 px-4 py-1.5 text-sm font-semibold text-primary">
+            <span className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-4 py-2 text-sm font-semibold text-white backdrop-blur">
+              <Sparkles size={16} />
               {portfolio.category.name}
             </span>
           )}
-          <h1 className="mt-4 font-heading text-3xl font-bold text-dark sm:text-4xl">{portfolio.title}</h1>
-          {portfolio.summary && <p className="mt-3 max-w-2xl text-lg text-muted">{portfolio.summary}</p>}
+          <h1 className="mt-4 font-heading text-3xl font-extrabold leading-tight text-white sm:text-4xl lg:text-5xl">{portfolio.title}</h1>
+          {portfolio.summary && <p className="mt-3 max-w-2xl text-base leading-7 text-white/75 sm:text-lg">{portfolio.summary}</p>}
 
           {infoItems.length > 0 && (
             <div className="mt-8 grid grid-cols-2 gap-4 sm:grid-cols-4">
-              {infoItems.map((item) => (
-                <div key={item.label}>
-                  <p className="text-xs font-semibold uppercase tracking-wide text-muted">{item.label}</p>
-                  <p className="mt-1 text-sm font-medium text-dark">{item.value}</p>
-                </div>
-              ))}
+              {infoItems.map((item) => {
+                const Icon = INFO_ICONS[item.label] || Building2;
+
+                return (
+                  <div key={item.label} className="rounded-xl border border-white/10 bg-white/[0.06] p-4">
+                    <Icon size={16} className="text-accent" />
+                    <p className="mt-2 text-xs font-semibold uppercase tracking-wide text-white/50">{item.label}</p>
+                    <p className="mt-1 text-sm font-medium text-white">{item.value}</p>
+                  </div>
+                );
+              })}
             </div>
           )}
 
@@ -92,9 +116,10 @@ export default function PortfolioDetailPage() {
               href={externalUrl(portfolio.website_url)}
               target="_blank"
               rel="noopener noreferrer"
-              className="mt-6 inline-flex items-center gap-1 text-sm font-semibold text-primary hover:underline"
+              className="mt-6 inline-flex items-center gap-1.5 text-sm font-semibold text-accent hover:underline"
             >
-              Kunjungi Website &rarr;
+              Kunjungi Website
+              <ExternalLink size={14} />
             </a>
           )}
         </div>
@@ -102,11 +127,11 @@ export default function PortfolioDetailPage() {
 
       <div className="mx-auto flex max-w-5xl flex-col gap-16 px-4 py-16 sm:px-6 lg:px-8">
         {portfolio.cover_image && (
-          <img src={portfolio.cover_image} alt={portfolio.title} className="w-full rounded-3xl object-cover shadow-lg" />
+          <img src={portfolio.cover_image} alt={portfolio.title} className="reveal-up -mt-20 w-full rounded-3xl object-cover shadow-xl" />
         )}
 
         {portfolio.description && (
-          <section>
+          <section className="reveal-up">
             <h2 className="mb-4 font-heading text-2xl font-bold text-dark">Tentang Proyek</h2>
             <div className="prose prose-sm max-w-none text-muted" dangerouslySetInnerHTML={{ __html: portfolio.description }} />
           </section>
@@ -115,19 +140,28 @@ export default function PortfolioDetailPage() {
         {(portfolio.challenge || portfolio.solution || portfolio.result) && (
           <section className="grid grid-cols-1 gap-6 md:grid-cols-3">
             {portfolio.challenge && (
-              <div className="rounded-2xl border border-border bg-surface p-6">
+              <div className="reveal-up rounded-2xl border border-border bg-surface p-6 shadow-sm">
+                <span className="mb-3 flex h-10 w-10 items-center justify-center rounded-xl bg-primary/10 text-primary">
+                  <Target size={18} />
+                </span>
                 <h3 className="font-heading text-base font-semibold text-dark">Tantangan</h3>
                 <div className="prose prose-sm mt-2 max-w-none text-muted" dangerouslySetInnerHTML={{ __html: portfolio.challenge }} />
               </div>
             )}
             {portfolio.solution && (
-              <div className="rounded-2xl border border-border bg-surface p-6">
+              <div className="reveal-up reveal-delay-2 rounded-2xl border border-border bg-surface p-6 shadow-sm">
+                <span className="mb-3 flex h-10 w-10 items-center justify-center rounded-xl bg-primary/10 text-primary">
+                  <Wrench size={18} />
+                </span>
                 <h3 className="font-heading text-base font-semibold text-dark">Solusi</h3>
                 <div className="prose prose-sm mt-2 max-w-none text-muted" dangerouslySetInnerHTML={{ __html: portfolio.solution }} />
               </div>
             )}
             {portfolio.result && (
-              <div className="rounded-2xl border border-border bg-surface p-6">
+              <div className="reveal-up reveal-delay-3 rounded-2xl border border-border bg-surface p-6 shadow-sm">
+                <span className="mb-3 flex h-10 w-10 items-center justify-center rounded-xl bg-accent/10 text-accent">
+                  <Trophy size={18} />
+                </span>
                 <h3 className="font-heading text-base font-semibold text-dark">Hasil</h3>
                 <div className="prose prose-sm mt-2 max-w-none text-muted" dangerouslySetInnerHTML={{ __html: portfolio.result }} />
               </div>
@@ -137,10 +171,10 @@ export default function PortfolioDetailPage() {
 
         {galleries.length > 0 && (
           <section>
-            <h2 className="mb-6 font-heading text-2xl font-bold text-dark">Galeri</h2>
-            <div className="grid grid-cols-2 gap-4 sm:grid-cols-3">
+            <SectionHeading label="Dokumentasi" title="Galeri" align="left" />
+            <div className="mt-8 grid grid-cols-2 gap-4 sm:grid-cols-3">
               {galleries.map((item, index) => (
-                <img key={index} src={item.image} alt={item.caption || portfolio.title} className="aspect-square w-full rounded-xl object-cover" />
+                <img key={index} src={item.image} alt={item.caption || portfolio.title} className="aspect-square w-full rounded-xl object-cover shadow-sm" />
               ))}
             </div>
           </section>
@@ -148,10 +182,11 @@ export default function PortfolioDetailPage() {
 
         {technologies.length > 0 && (
           <section>
-            <h2 className="mb-6 font-heading text-2xl font-bold text-dark">Teknologi & Tools</h2>
-            <div className="flex flex-wrap gap-3">
+            <SectionHeading label="Stack" title="Teknologi & Tools" align="left" />
+            <div className="mt-6 flex flex-wrap gap-3">
               {technologies.map((tech) => (
-                <span key={tech} className="rounded-lg border border-border bg-surface px-4 py-2 text-sm font-medium text-dark">
+                <span key={tech} className="inline-flex items-center gap-2 rounded-lg border border-border bg-surface px-4 py-2 text-sm font-medium text-dark">
+                  <Wrench size={14} className="text-primary" />
                   {tech}
                 </span>
               ))}
@@ -161,13 +196,13 @@ export default function PortfolioDetailPage() {
 
         {services.length > 0 && (
           <section>
-            <h2 className="mb-6 font-heading text-2xl font-bold text-dark">Layanan Terkait</h2>
-            <div className="flex flex-wrap gap-3">
+            <SectionHeading label="Terkait" title="Layanan Terkait" align="left" />
+            <div className="mt-6 flex flex-wrap gap-3">
               {services.map((service) => (
                 <Link
                   key={service.id}
                   to={`/layanan/${service.slug}`}
-                  className="rounded-lg border border-border bg-surface px-4 py-2 text-sm font-medium text-dark hover:border-primary hover:text-primary"
+                  className="rounded-lg border border-border bg-surface px-4 py-2 text-sm font-medium text-dark transition-colors hover:border-primary hover:text-primary"
                 >
                   {service.name}
                 </Link>
@@ -178,8 +213,8 @@ export default function PortfolioDetailPage() {
 
         {testimonials.length > 0 && (
           <section>
-            <h2 className="mb-6 font-heading text-2xl font-bold text-dark">Testimoni Klien</h2>
-            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
+            <SectionHeading title="Testimoni Klien" />
+            <div className="mt-8 grid grid-cols-1 gap-6 sm:grid-cols-2">
               {testimonials.map((testimonial, index) => (
                 <TestimonialCard key={index} testimonial={testimonial} />
               ))}
